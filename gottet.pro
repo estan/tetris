@@ -27,14 +27,18 @@ HEADERS = src/board.h \
 	src/locale_dialog.h \
 	src/piece.h \
 	src/score_board.h \
-	src/window.h
+	src/window.h \
+    src/sensor.h \
+    src/sensorreading.h
 
 SOURCES = src/board.cpp \
 	src/locale_dialog.cpp \
 	src/main.cpp \
 	src/piece.cpp \
 	src/score_board.cpp \
-	src/window.cpp
+	src/window.cpp \
+    src/sensor.cpp \
+    src/sensorreading.cpp
 
 TRANSLATIONS = translations/gottet_en.ts \
 	translations/gottet_fr.ts
