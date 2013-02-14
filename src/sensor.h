@@ -2,7 +2,6 @@
 #define SENSOR_H
 
 #include <QObject>
-#include <QByteArray>
 #include <QtSerialPort/QSerialPort>
 
 class Sensor : public QObject
@@ -29,7 +28,6 @@ private slots:
 
 private:
 	QSerialPort m_serial;
-	QByteArray m_buffer;
 };
 
 #endif // SENSOR_H
