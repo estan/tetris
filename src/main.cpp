@@ -21,6 +21,9 @@
 #include "window.h"
 
 #include <QApplication>
+#include <QDebug>
+#include <QtSerialPort/QSerialPort>
+#include <QtSerialPort/QSerialPortInfo>
 
 int main(int argc, char** argv)
 {
@@ -34,6 +37,21 @@ int main(int argc, char** argv)
 
 	Window window;
 	window.show();
+
+	// Test QtSerialPort
+	foreach (const QSerialPortInfo &info, QSerialPortInfo::availablePorts()) {
+		qDebug() << "Name        : " << info.portName();
+		qDebug() << "Description : " << info.description();
+		qDebug() << "Manufacturer: " << info.manufacturer();
+ 
+		QSerialPort serial;
+		serial.setPort(info);
+		if (serial.open(QIODevice::ReadWrite)) {
+			serial.close();
+		} else {
+			qDebug() << "Failed to open " << info.portName();
+		}
+	}
 
 	return app.exec();
 }
