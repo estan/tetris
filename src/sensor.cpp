@@ -33,7 +33,43 @@ void Sensor::readData()
 	while (m_serial.canReadLine()) {
 		QByteArray line = m_serial.readLine().trimmed();
 		if (reading.fromCsv(line)) {
-			qDebug() << reading;
+			m_backLog.append(reading.conductance());
+			if (m_backLog.size() > 10) {
+				m_backLog.removeFirst();
+				updateStressLevel();
+			}
 		}
 	}
+}
+
+void Sensor::updateStressLevel()
+{
+	// Calculate average conductance over last 10 readings.
+	double sum = 0;
+	foreach (double conductance, m_backLog) {
+		sum += conductance;
+	}
+	double average = sum / 10;
+
+	// Calculate stress level.
+	StressLevel stressLevel;
+	if (average > m_highLimit) {
+		stressLevel = HighLevel;
+	} else if (average > m_lowLimit) {
+		stressLevel = MediumLevel;
+	} else {
+		stressLevel = LowLevel;
+	}
+
+	if (stressLevel != m_currentStressLevel) {
+		// Actual change in stress level has occurred.
+		m_currentStressLevel = stressLevel;
+		emit stressLevelChanged(m_currentStressLevel);
+	}
+}
+
+void Sensor::setLimits(double low, double high)
+{
+	m_lowLimit = low;
+	m_highLimit = high;
 }

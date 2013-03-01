@@ -38,7 +38,8 @@ int main(int argc, char** argv)
 	window.show();
 
 	// Test the Sensor class.
-	Sensor sensor("/dev/rfcomm0");
+	Sensor sensor("/dev/pts/8");
+	sensor.setLimits(2.3, 3.4);
 	sensor.start();
 
 	return app.exec();
