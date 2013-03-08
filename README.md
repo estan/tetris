@@ -1,4 +1,5 @@
-tetris-kth
-==========
+tetris
+======
 
-Modified version of gottet used for our Bachelor's essay work.
+Modified version of the Tetris clone gottet,
+used for our Bachelor's essay work.
