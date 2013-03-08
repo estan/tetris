@@ -21,9 +21,9 @@ isEmpty(VERSION) {
 DEFINES += VERSIONSTR=\\\"git.$${VERSION}\\\"
 
 unix: !macx {
-	TARGET = gottet
+	TARGET = tetris
 } else {
-	TARGET = Gottet
+	TARGET = Tetris
 }
 
 HEADERS = src/board.h \
@@ -39,11 +39,11 @@ SOURCES = src/board.cpp \
 	src/score_board.cpp \
 	src/window.cpp
 
-TRANSLATIONS = translations/gottet_en.ts \
-	translations/gottet_fr.ts
+TRANSLATIONS = translations/tetris_en.ts \
+	translations/tetris_fr.ts
 
 macx {
-	ICON = icons/gottet.icns
+	ICON = icons/tetris.icns
 } else:unix {
 	RESOURCES = icons/icon.qrc
 } else:win32 {
@@ -60,14 +60,14 @@ unix: !macx {
 
 	target.path = $$PREFIX/$$BINDIR/
 
-	icon.files = icons/gottet.png
+	icon.files = icons/tetris.png
 	icon.path = $$PREFIX/share/icons/hicolor/48x48/apps
 
-	desktop.files = icons/gottet.desktop
+	desktop.files = icons/tetris.desktop
 	desktop.path = $$PREFIX/share/applications/
 
 	qm.files = translations/*.qm
-	qm.path = $$PREFIX/share/gottet/translations
+	qm.path = $$PREFIX/share/tetris/translations
 
 	INSTALLS += target icon desktop qm
 }

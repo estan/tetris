@@ -27,12 +27,12 @@
 int main(int argc, char** argv)
 {
 	QApplication app(argc, argv);
-	app.setApplicationName("Gottet");
+	app.setApplicationName("Tetris");
 	app.setApplicationVersion(VERSIONSTR);
-	app.setOrganizationDomain("gottcode.org");
-	app.setOrganizationName("GottCode");
+	app.setOrganizationDomain("kth.se");
+	app.setOrganizationName("KTH");
 
-	LocaleDialog::loadTranslator("gottet_");
+	LocaleDialog::loadTranslator("tetris_");
 
 	Window window;
 	window.show();

@@ -17,8 +17,8 @@
  *
  ***********************************************************************/
 
-#ifndef GOTTET_LOCALE_DIALOG_H
-#define GOTTET_LOCALE_DIALOG_H
+#ifndef LOCALE_DIALOG_H
+#define LOCALE_DIALOG_H
 
 #include <QDialog>
 class QComboBox;
@@ -78,4 +78,4 @@ private:
 	static QString m_appname; /**< application name passed to loadTranslator() */
 };
 
-#endif // GOTTET_LOCALE_DIALOG_H
+#endif // LOCALE_DIALOG_H

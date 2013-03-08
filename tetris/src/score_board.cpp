@@ -30,7 +30,7 @@
 ScoreBoard::ScoreBoard(QWidget* parent)
 :	QDialog(parent)
 {
-	setWindowTitle(tr("Gottet Scores"));
+	setWindowTitle(tr("Tetris Scores"));
 
 	// Create tree view
 	m_scores = new QTreeWidget(this);

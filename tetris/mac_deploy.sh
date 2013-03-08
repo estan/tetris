@@ -1,6 +1,6 @@
 #!/bin/bash
 
-APP='Gottet'
+APP='Tetris'
 BUNDLE="$APP.app"
 VERSION=$(git rev-parse --short HEAD)
 
