@@ -1,6 +1,6 @@
 #!/bin/bash
 
-APP='Tetris'
+APP='TetrisStatic'
 BUNDLE="$APP.app"
 VERSION=$(git rev-parse --short HEAD)
 

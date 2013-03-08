@@ -1,6 +1,6 @@
 @ECHO OFF
 
-SET APP=Tetris
+SET APP=TetrisStatic
 FOR /f %%i IN ('git rev-parse --short HEAD') DO SET VERSION=%%i
 
 ECHO Copying executable

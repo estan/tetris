@@ -1,3 +1,3 @@
 TEMPLATE = subdirs
-SUBDIRS = tetris sensor simulator
-tetris.depends = sensor
+SUBDIRS = tetris-static sensor simulator
+tetris-static.depends = sensor

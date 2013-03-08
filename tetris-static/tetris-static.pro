@@ -21,9 +21,9 @@ isEmpty(VERSION) {
 DEFINES += VERSIONSTR=\\\"git.$${VERSION}\\\"
 
 unix: !macx {
-	TARGET = tetris
+	TARGET = tetris-static
 } else {
-	TARGET = Tetris
+	TARGET = TetrisStatic
 }
 
 HEADERS = src/board.h \
@@ -39,11 +39,11 @@ SOURCES = src/board.cpp \
 	src/score_board.cpp \
 	src/window.cpp
 
-TRANSLATIONS = translations/tetris_en.ts \
-	translations/tetris_fr.ts
+TRANSLATIONS = translations/tetris-static_en.ts \
+	translations/tetris-static_fr.ts
 
 macx {
-	ICON = icons/tetris.icns
+	ICON = icons/tetris-static.icns
 } else:unix {
 	RESOURCES = icons/icon.qrc
 } else:win32 {
@@ -60,14 +60,14 @@ unix: !macx {
 
 	target.path = $$PREFIX/$$BINDIR/
 
-	icon.files = icons/tetris.png
+	icon.files = icons/tetris-static.png
 	icon.path = $$PREFIX/share/icons/hicolor/48x48/apps
 
-	desktop.files = icons/tetris.desktop
+	desktop.files = icons/tetris-static.desktop
 	desktop.path = $$PREFIX/share/applications/
 
 	qm.files = translations/*.qm
-	qm.path = $$PREFIX/share/tetris/translations
+	qm.path = $$PREFIX/share/tetris-static/translations
 
 	INSTALLS += target icon desktop qm
 }

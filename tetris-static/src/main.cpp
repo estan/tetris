@@ -32,7 +32,7 @@ int main(int argc, char** argv)
 	app.setOrganizationDomain("kth.se");
 	app.setOrganizationName("KTH");
 
-	LocaleDialog::loadTranslator("tetris_");
+	LocaleDialog::loadTranslator("tetris-static_");
 
 	Window window;
 	window.show();
