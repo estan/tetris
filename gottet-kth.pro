@@ -1,2 +1,3 @@
 TEMPLATE = subdirs
-SUBDIRS = gottet
+SUBDIRS = gottet sensor
+gottet.depends = sensor

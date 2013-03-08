@@ -7,6 +7,9 @@ macx {
 	CONFIG += x86_64
 }
 
+INCLUDEPATH += ../sensor
+LIBS += -L../sensor -lsensor
+
 MOC_DIR = build
 OBJECTS_DIR = build
 RCC_DIR = build
@@ -27,18 +30,14 @@ HEADERS = src/board.h \
 	src/locale_dialog.h \
 	src/piece.h \
 	src/score_board.h \
-	src/window.h \
-    src/sensor.h \
-    src/sensorreading.h
+	src/window.h
 
 SOURCES = src/board.cpp \
 	src/locale_dialog.cpp \
 	src/main.cpp \
 	src/piece.cpp \
 	src/score_board.cpp \
-	src/window.cpp \
-    src/sensor.cpp \
-    src/sensorreading.cpp
+	src/window.cpp
 
 TRANSLATIONS = translations/gottet_en.ts \
 	translations/gottet_fr.ts
