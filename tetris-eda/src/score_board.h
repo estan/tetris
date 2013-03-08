@@ -1,6 +1,6 @@
 /***********************************************************************
  *
- * Copyright (C) 2007, 2008, 2012 Graeme Gott <graeme@gottcode.org>
+ * Copyright (C) 2008 Graeme Gott <graeme@gottcode.org>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,25 +17,31 @@
  *
  ***********************************************************************/
 
-#include "locale_dialog.h"
-#include "window.h"
-#include "sensor.h"
+#ifndef SCORE_BOARD_H
+#define SCORE_BOARD_H
 
-#include <QApplication>
-#include <QDebug>
+#include <QDialog>
+class QTreeWidget;
+class QTreeWidgetItem;
 
-int main(int argc, char** argv)
+class ScoreBoard : public QDialog
 {
-	QApplication app(argc, argv);
-	app.setApplicationName("Tetris");
-	app.setApplicationVersion(VERSIONSTR);
-	app.setOrganizationDomain("kth.se");
-	app.setOrganizationName("KTH");
+	Q_OBJECT
+public:
+	ScoreBoard(QWidget* parent = 0);
 
-	LocaleDialog::loadTranslator("tetris-static_");
+	int highScorePosition(int score) const;
 
-	Window window;
-	window.show();
+public slots:
+	void addHighScore(int level, int lines, int score);
 
-	return app.exec();
-}
+protected:
+	virtual void hideEvent(QHideEvent* event);
+
+private:
+	QTreeWidgetItem* createItem(int level, int lines, int score) const;
+
+	QTreeWidget* m_scores;
+};
+
+#endif // SCORE_BOARD_H

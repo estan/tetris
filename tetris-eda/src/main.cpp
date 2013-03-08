@@ -32,10 +32,15 @@ int main(int argc, char** argv)
 	app.setOrganizationDomain("kth.se");
 	app.setOrganizationName("KTH");
 
-	LocaleDialog::loadTranslator("tetris-static_");
+	LocaleDialog::loadTranslator("tetris-eda_");
 
 	Window window;
 	window.show();
+
+	// Test the Sensor class.
+	Sensor sensor("/dev/pts/8");
+	sensor.setLimits(2.3, 3.4);
+	sensor.start();
 
 	return app.exec();
 }

@@ -1,0 +1,8 @@
+[Desktop Entry]
+Name=Tetris
+GenericName=Falling Blocks Game
+Exec=tetris-eda
+Icon=tetris-eda
+Terminal=false
+Type=Application
+Categories=Qt;Game;ArcadeGame;

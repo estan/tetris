@@ -1,6 +1,6 @@
 /***********************************************************************
  *
- * Copyright (C) 2007, 2008, 2012 Graeme Gott <graeme@gottcode.org>
+ * Copyright (C) 2008, 2012 Graeme Gott <graeme@gottcode.org>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,25 +17,41 @@
  *
  ***********************************************************************/
 
-#include "locale_dialog.h"
-#include "window.h"
-#include "sensor.h"
+#ifndef WINDOW_H
+#define WINDOW_H
 
-#include <QApplication>
-#include <QDebug>
+#include <QMainWindow>
+class QAction;
+class QLabel;
+class Board;
+class ScoreBoard;
 
-int main(int argc, char** argv)
+class Window : public QMainWindow
 {
-	QApplication app(argc, argv);
-	app.setApplicationName("Tetris");
-	app.setApplicationVersion(VERSIONSTR);
-	app.setOrganizationDomain("kth.se");
-	app.setOrganizationName("KTH");
+	Q_OBJECT
+public:
+	Window(QWidget *parent = 0, Qt::WindowFlags wf = 0);
 
-	LocaleDialog::loadTranslator("tetris-static_");
+protected:
+	virtual void closeEvent(QCloseEvent* event);
 
-	Window window;
-	window.show();
+private slots:
+	void pauseAvailable(bool available);
+	void scoreUpdated(int score);
+	void newGame();
+	void gameOver();
+	void about();
+	void setLocale();
 
-	return app.exec();
-}
+private:
+	Board* m_board;
+	QAction* m_pause_action;
+	QAction* m_resume_action;
+	QLabel* m_preview;
+	QLabel* m_level;
+	QLabel* m_lines;
+	QLabel* m_score;
+	ScoreBoard* m_score_board;
+};
+
+#endif // WINDOW_H

@@ -1,6 +1,6 @@
 /***********************************************************************
  *
- * Copyright (C) 2007, 2008, 2012 Graeme Gott <graeme@gottcode.org>
+ * Copyright (C) 2007-2008 Graeme Gott <graeme@gottcode.org>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,25 +17,72 @@
  *
  ***********************************************************************/
 
-#include "locale_dialog.h"
-#include "window.h"
-#include "sensor.h"
+#ifndef PIECE_H
+#define PIECE_H
 
-#include <QApplication>
-#include <QDebug>
-
-int main(int argc, char** argv)
+struct Cell
 {
-	QApplication app(argc, argv);
-	app.setApplicationName("Tetris");
-	app.setApplicationVersion(VERSIONSTR);
-	app.setOrganizationDomain("kth.se");
-	app.setOrganizationName("KTH");
+	Cell(int x1 = -1, int y1 = -1)
+	:	x(x1),
+		y(y1)
+	{
+	}
 
-	LocaleDialog::loadTranslator("tetris-static_");
+	int x;
+	int y;
+};
 
-	Window window;
-	window.show();
+class Board;
 
-	return app.exec();
-}
+class Piece
+{
+public:
+	Piece(int type, Board* board);
+
+	bool isValid() const
+	{
+		return m_valid;
+	}
+
+	bool moveLeft()
+	{
+		return move(-1, 0);
+	}
+
+	bool moveRight()
+	{
+		return move(1, 0);
+	}
+
+	bool moveDown()
+	{
+		return move(0, 1);
+	}
+
+	bool rotate();
+	void drop();
+
+	const Cell* cells() const
+	{
+		return m_cells;
+	}
+
+	int type() const
+	{
+		return m_type;
+	}
+
+	static void cells(Cell* cells, int type);
+
+private:
+	bool move(int x, int y);
+	bool updatePosition(const Cell* cells);
+
+	int m_type;
+	Cell m_cells[4];
+	Cell m_pivot;
+	bool m_valid;
+	Board* m_board;
+};
+
+#endif // PIECE_H
