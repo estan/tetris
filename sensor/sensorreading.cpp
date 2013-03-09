@@ -112,6 +112,6 @@ QDebug operator<<(QDebug debug, const SensorReading &reading)
 	debug.nospace() << "battery: " << reading.battery() << " V, ";
 	debug.nospace() << "temperature: " << reading.temperature() << " C, ";
 	debug.nospace() << "conductance: " << reading.conductance() << " µS, ";
-	debug.nospace() << "time: " << reading.time();
+	debug.nospace() << "time: " << reading.time().toString("YYYY:mm:dd hh:mm:ss.zzz UTC");
 	return debug.space();
 }
