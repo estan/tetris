@@ -50,9 +50,8 @@ void Sensor::readData()
 		} else {
 			m_readings.append(reading);
 			qDebug() << reading;
-			if (!m_readings.isEmpty() && QDateTime::currentDateTimeUtc().msecsTo(m_readings.first().time()) >= 5000) {
-				qDebug() << "==> Process " << m_readings.size() << " readings in buffer:";
-				qDebug() << "==>   From " << m_readings.first().time().toString("hh:mm:ss.zzz") + " to " + m_readings.last().time().toString("hh:mm:ss.zzz");
+			qint64 sinceOldest = m_readings.first().time().msecsTo(QDateTime::currentDateTimeUtc());
+			if (!m_readings.isEmpty() && sinceOldest >= 5000) {
 				emit batchAvailable(m_readings);
 				m_readings.clear();
 			}
