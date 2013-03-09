@@ -19,7 +19,6 @@
 
 #include "locale_dialog.h"
 #include "window.h"
-#include "sensor.h"
 
 #include <QApplication>
 #include <QDebug>

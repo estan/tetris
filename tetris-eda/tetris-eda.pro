@@ -7,9 +7,6 @@ macx {
 	CONFIG += x86_64
 }
 
-INCLUDEPATH += ../sensor
-LIBS += -L../sensor -lsensor
-
 MOC_DIR = build
 OBJECTS_DIR = build
 RCC_DIR = build
@@ -71,3 +68,14 @@ unix: !macx {
 
 	INSTALLS += target icon desktop qm
 }
+
+win32:CONFIG(release, debug|release): LIBS += -L$$OUT_PWD/../sensor/release/ -lsensor
+else:win32:CONFIG(debug, debug|release): LIBS += -L$$OUT_PWD/../sensor/debug/ -lsensor
+else:unix: LIBS += -L$$OUT_PWD/../sensor/ -lsensor
+
+INCLUDEPATH += $$PWD/../sensor
+DEPENDPATH += $$PWD/../sensor
+
+win32:CONFIG(release, debug|release): PRE_TARGETDEPS += $$OUT_PWD/../sensor/release/sensor.lib
+else:win32:CONFIG(debug, debug|release): PRE_TARGETDEPS += $$OUT_PWD/../sensor/debug/sensor.lib
+else:unix: PRE_TARGETDEPS += $$OUT_PWD/../sensor/libsensor.a

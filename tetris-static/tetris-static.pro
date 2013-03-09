@@ -7,9 +7,6 @@ macx {
 	CONFIG += x86_64
 }
 
-INCLUDEPATH += ../sensor
-LIBS += -L../sensor -lsensor
-
 MOC_DIR = build
 OBJECTS_DIR = build
 RCC_DIR = build
