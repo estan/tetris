@@ -41,7 +41,7 @@
 Window::Window(QWidget *parent, Qt::WindowFlags wf)
 :	QMainWindow(parent, wf)
 {
-	setWindowTitle(tr("Tetris"));
+	setWindowTitle(tr("Tetris EDA"));
 	setWindowIcon(QIcon(":/tetris-eda.png"));
 
 	QWidget* contents = new QWidget(this);
