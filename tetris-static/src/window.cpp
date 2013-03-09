@@ -21,6 +21,7 @@
 
 #include "board.h"
 #include "locale_dialog.h"
+#include "difficulty_dialog.h"
 #include "score_board.h"
 
 #include <ctime>
@@ -122,6 +123,7 @@ Window::Window(QWidget *parent, Qt::WindowFlags wf)
 
 	menu = menuBar()->addMenu(tr("&Settings"));
 	menu->addAction(tr("Application &Language..."), this, SLOT(setLocale()));
+	menu->addAction(tr("Difficulty Level..."), this, SLOT(setDifficulty()));
 
 	menu = menuBar()->addMenu(tr("&Help"));
 	menu->addAction(tr("&About"), this, SLOT(about()));
@@ -150,6 +152,7 @@ Window::Window(QWidget *parent, Qt::WindowFlags wf)
 
 	// Restore window
 	restoreGeometry(QSettings().value("Geometry").toByteArray());
+	setDifficulty();
 }
 
 /*****************************************************************************/
@@ -234,4 +237,13 @@ void Window::setLocale()
 	dialog.exec();
 }
 
+/*****************************************************************************/
+
+void Window::setDifficulty()
+{
+	DifficultyDialog dialog;
+	if (dialog.exec() == QDialog::Accepted) {
+		m_board->setDifficulty(dialog.difficulty());
+	}
+}
 /*****************************************************************************/

@@ -30,14 +30,16 @@ HEADERS = src/board.h \
 	src/locale_dialog.h \
 	src/piece.h \
 	src/score_board.h \
-	src/window.h
+	src/window.h \
+    src/difficulty_dialog.h
 
 SOURCES = src/board.cpp \
 	src/locale_dialog.cpp \
 	src/main.cpp \
 	src/piece.cpp \
 	src/score_board.cpp \
-	src/window.cpp
+	src/window.cpp \
+    src/difficulty_dialog.cpp
 
 TRANSLATIONS = translations/tetris-static_en.ts \
 	translations/tetris-static_fr.ts

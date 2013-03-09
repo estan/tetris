@@ -1,6 +1,6 @@
 /***********************************************************************
  *
- * Copyright (C) 2008, 2012 Graeme Gott <graeme@gottcode.org>
+ * Copyright (C) 2013 Elvis Stansvik <stansvik@kth.se>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,42 +17,41 @@
  *
  ***********************************************************************/
 
-#ifndef WINDOW_H
-#define WINDOW_H
+#ifndef DIFFICULTY_DIALOG_H
+#define DIFFICULTY_DIALOG_H
 
-#include <QMainWindow>
-class QAction;
-class QLabel;
-class Board;
-class ScoreBoard;
+#include <QDialog>
 
-class Window : public QMainWindow
+#include "board.h"
+
+class QComboBox;
+
+/**
+ * Dialog to set difficulty level.
+ *
+ * This class handles setting the game difficulty level.
+ */
+class DifficultyDialog : public QDialog
 {
 	Q_OBJECT
+
 public:
-	Window(QWidget *parent = 0, Qt::WindowFlags wf = 0);
+	/**
+	 * Construct a dialog to choose difficulty level.
+	 *
+	 * @param parent the parent widget of the dialog
+	 */
+	DifficultyDialog(QWidget* parent = 0);
 
-protected:
-	virtual void closeEvent(QCloseEvent* event);
-
-private slots:
-	void pauseAvailable(bool available);
-	void scoreUpdated(int score);
-	void newGame();
-	void gameOver();
-	void about();
-	void setLocale();
-	void setDifficulty();
+	/**
+	 * Return the picked difficulty.
+	 *
+	 * @return picked difficulty
+	 */
+	Board::Difficulty difficulty();
 
 private:
-	Board* m_board;
-	QAction* m_pause_action;
-	QAction* m_resume_action;
-	QLabel* m_preview;
-	QLabel* m_level;
-	QLabel* m_lines;
-	QLabel* m_score;
-	ScoreBoard* m_score_board;
+	QComboBox* m_difficulties; /**< list of difficulties */
 };
 
-#endif // WINDOW_H
+#endif // DIFFICULTY_DIALOG_H
