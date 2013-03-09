@@ -5,5 +5,7 @@ greaterThan(QT_MAJOR_VERSION, 4) {
 }
 CONFIG += staticlib serialport
 
-HEADERS += simulator.h
-SOURCES += main.cpp simulator.cpp
+HEADERS += simulator.h \
+    console.h
+SOURCES += main.cpp simulator.cpp \
+    console.cpp
