@@ -25,6 +25,7 @@
 #include <QMessageBox>
 #include <QPainter>
 #include <QPixmap>
+#include <QSettings>
 #include <QTimer>
 
 /*****************************************************************************/
@@ -52,20 +53,26 @@ Board::Board(QWidget* parent)
 	m_piece_size(0),
 	m_started(false),
 	m_done(false),
-	m_paused(false)
+	m_paused(false),
+	m_difficulty(Easy),
+	m_easyShiftTime(1000),
+	m_mediumShiftTime(500),
+	m_hardShiftTime(250),
+	m_currentShiftTime(500)
 {
 	setMinimumSize(201, 401);
 	setFocusPolicy(Qt::StrongFocus);
 	setFocus();
 
 	m_shift_timer = new QTimer(this);
-	m_shift_timer->setInterval(500);
+	m_shift_timer->setInterval(m_currentShiftTime);
 	m_shift_timer->setSingleShot(true);
 	connect(m_shift_timer, SIGNAL(timeout()), this, SLOT(shiftPiece()));
 
 	m_flash_timer = new QTimer(this);
 	m_flash_timer->setInterval(80);
 	connect(m_flash_timer, SIGNAL(timeout()), this, SLOT(flashLines()));
+
 
 	for (int i = 0; i < 4; ++i) {
 		m_full_lines[i] = -1;
@@ -76,6 +83,8 @@ Board::Board(QWidget* parent)
 			m_cells[col][row] = 0;
 		}
 	}
+
+	setDifficulty(static_cast<Difficulty>(QSettings().value("Difficulty").toInt()));
 }
 
 /*****************************************************************************/
@@ -120,6 +129,30 @@ void Board::findFullLines()
 
 /*****************************************************************************/
 
+void Board::setDifficulty(Difficulty difficulty)
+{
+	switch (difficulty) {
+	case Easy:
+		m_currentShiftTime = m_easyShiftTime;
+		break;
+	case Medium:
+		m_currentShiftTime = m_mediumShiftTime;
+		break;
+	case Hard:
+		m_currentShiftTime = m_hardShiftTime;
+		break;
+	default:
+		qWarning("Unknown difficulty level");
+		return;
+	}
+	m_difficulty = difficulty;
+	m_shift_timer->setInterval(m_currentShiftTime);
+	m_shift_timer->setSingleShot(true);
+	QSettings().setValue("Difficulty", static_cast<int>(difficulty));
+}
+
+/*****************************************************************************/
+
 void Board::newGame()
 {
 	if (!endGame()) {
@@ -138,7 +171,7 @@ void Board::newGame()
 	m_removed_lines = 0;
 	m_level = 1;
 	m_score = 0;
-	m_shift_timer->setInterval(500);
+	m_shift_timer->setInterval(m_currentShiftTime);
 	m_next_piece = (rand() % 7) + 1;
 
 	for (int i = 0; i < 4; ++i)
@@ -378,7 +411,6 @@ void Board::removeLines()
 	}
 
 	m_level = (m_removed_lines / 10) + 1;
-	m_shift_timer->setInterval(10000 / (m_removed_lines + 20));
 	m_score += score;
 	emit levelUpdated(m_level);
 	emit linesRemovedUpdated(m_removed_lines);

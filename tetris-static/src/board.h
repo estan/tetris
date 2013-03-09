@@ -28,12 +28,22 @@ class Piece;
 class Board : public QWidget
 {
 	Q_OBJECT
+	Q_ENUMS(Difficulty)
+
+
 public:
+	enum Difficulty {
+		Easy,
+		Medium,
+		Hard
+	};
+
 	Board(QWidget* parent = 0);
 
 	bool cell(int x, int y) const;
 	bool endGame();
 	void findFullLines();
+	void setDifficulty(Difficulty difficulty);
 
 public slots:
 	void newGame();
@@ -50,6 +60,7 @@ signals:
 	void gameStarted();
 	void hideMessage();
 	void showMessage(const QString& message);
+	void difficultyChanged(Difficulty difficulty);
 
 protected:
 	virtual void keyPressEvent(QKeyEvent* event);
@@ -88,6 +99,12 @@ private:
 	bool m_started;
 	bool m_done;
 	bool m_paused;
+
+	Difficulty m_difficulty;
+	int m_easyShiftTime;
+	int m_mediumShiftTime;
+	int m_hardShiftTime;
+	int m_currentShiftTime;
 };
 
 inline bool Board::cell(int x, int y) const
