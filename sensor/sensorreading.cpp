@@ -111,7 +111,7 @@ QDebug operator<<(QDebug debug, const SensorReading &reading)
 	debug.nospace() << "z: " << reading.z() << " G, ";
 	debug.nospace() << "battery: " << reading.battery() << " V, ";
 	debug.nospace() << "temperature: " << reading.temperature() << " C, ";
-	debug.nospace() << "conductance: " << reading.conductance() << " µS";
+	debug.nospace() << "conductance: " << reading.conductance() << " µS, ";
 	debug.nospace() << "time: " << reading.time();
 	return debug.space();
 }
