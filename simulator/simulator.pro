@@ -1,9 +1,6 @@
-TEMPLATE = app
+include(../common.pri)
 
-greaterThan(QT_MAJOR_VERSION, 4) {
-	QT += serialport
-}
-CONFIG += staticlib serialport
+TEMPLATE = app
 
 HEADERS += simulator.h \
     console.h

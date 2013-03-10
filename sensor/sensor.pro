@@ -1,9 +1,12 @@
+include(../common.pri)
+
 TEMPLATE = lib
+CONFIG += staticlib
 
-greaterThan(QT_MAJOR_VERSION, 4) {
-	QT += serialport
+SOURCES = sensorreading.cpp
+HEADERS = sensorreading.h
+
+serialport {
+	SOURCES += sensor.cpp
+	HEADERS += sensor.h
 }
-CONFIG += staticlib serialport
-
-SOURCES = sensor.cpp sensorreading.cpp
-HEADERS = sensor.h sensorreading.h

@@ -1,3 +1,12 @@
+include(common.pri)
+
 TEMPLATE = subdirs
-SUBDIRS = tetris-static tetris-eda sensor simulator
-tetris-eda.depends = sensor
+SUBDIRS = tetris-static sensor
+
+serialport {
+	SUBDIRS += tetris-eda simulator
+	tetris-eda.depends = sensor
+} else {
+	message("No QtSerialPort found: tetris-eda and simulator will be excluded.")
+}
+
