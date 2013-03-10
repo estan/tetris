@@ -28,8 +28,12 @@ Simulator::~Simulator()
 		m_serial.close();
 }
 
-bool Simulator::start(const QString &portName)
+bool Simulator::start(const QString &portName, int frequency)
 {
+	if (frequency < 1 || frequency > 100) {
+		qWarning("Unsupported frequency");
+		return false;
+	}
 	m_serial.setPortName(portName);
 	if (!m_serial.open(QIODevice::WriteOnly)) {
 		qWarning("Failed to open serial port");
@@ -48,9 +52,9 @@ bool Simulator::start(const QString &portName)
 	connect(console, SIGNAL(finished()), console, SLOT(deleteLater()));
 	console->start();
 
-	qDebug() << "Simulator is running, press Enter to stop";
+	qDebug() << "Simulator is running, press [Enter] to stop";
 
-	m_timer.start(125);
+	m_timer.start(qFloor(1000/frequency));
 	return true;
 }
 
@@ -76,7 +80,7 @@ void Simulator::writeReading()
 		// Write a line from the input file.
 		reading = m_file.readLine();
 		if (reading.isEmpty()) {
-			qDebug() << "End of input file reached, exiting...";
+			qDebug() << "End of input file reached";
 			stop();
 		}
 	} else {

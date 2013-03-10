@@ -17,7 +17,7 @@ public:
 	explicit Simulator(QObject *parent = 0);
 	explicit Simulator(const QString &fileName, QObject *parent = 0);
 	virtual ~Simulator();
-	bool start(const QString &portName);
+	bool start(const QString &portName, int frequency);
 
 private slots:
 	void writeReading();
