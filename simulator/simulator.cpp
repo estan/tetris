@@ -73,7 +73,7 @@ void Simulator::writeReading()
 		double eda = 3 + qSin(m_numReadings*(M_PI/180));
 		reading = QString("0,0.39,0.12,0.86,3.55,32.9,%1\r\n").arg(eda).toLatin1();
 	} else if (m_mode == FileMode) {
-		// Read a line from the
+		// Write a line from the input file.
 		reading = m_file.readLine();
 		if (reading.isEmpty()) {
 			qDebug() << "End of input file reached, exiting...";
