@@ -19,7 +19,6 @@
 
 #include "locale_dialog.h"
 #include "window.h"
-#include "sensor.h"
 
 #include <QApplication>
 #include <QDebug>
@@ -27,7 +26,7 @@
 int main(int argc, char** argv)
 {
 	QApplication app(argc, argv);
-	app.setApplicationName("Tetris");
+	app.setApplicationName("Tetris EDA");
 	app.setApplicationVersion(VERSIONSTR);
 	app.setOrganizationDomain("kth.se");
 	app.setOrganizationName("KTH");
@@ -36,10 +35,6 @@ int main(int argc, char** argv)
 
 	Window window;
 	window.show();
-
-	// Test the Sensor class.
-	Sensor sensor("/dev/pts/8");
-	sensor.start();
 
 	return app.exec();
 }

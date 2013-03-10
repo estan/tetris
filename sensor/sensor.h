@@ -13,9 +13,7 @@ class Sensor : public QObject
 
 public:
 	explicit Sensor(const QString &portName, QObject *parent = 0);
-
-	void start();
-	void stop();
+	virtual ~Sensor();
 
 signals:
 	void started();
@@ -24,6 +22,8 @@ signals:
 	void error(const QString &error);
 
 public slots:
+	void start();
+	void stop();
 	void setPort(const QString &portName);
 
 private slots:

@@ -23,14 +23,18 @@
 #include <QMainWindow>
 class QAction;
 class QLabel;
+class QString;
+class QThread;
 class Board;
 class ScoreBoard;
+class SettingsDialog;
 
 class Window : public QMainWindow
 {
 	Q_OBJECT
 public:
 	Window(QWidget *parent = 0, Qt::WindowFlags wf = 0);
+	~Window();
 
 protected:
 	virtual void closeEvent(QCloseEvent* event);
@@ -43,6 +47,14 @@ private slots:
 	void about();
 	void setLocale();
 
+	void showSettings();
+	void sensorStarted();
+	void sensorStopped();
+	void sensorError(const QString &error);
+
+private:
+	void initSensor();
+
 private:
 	Board* m_board;
 	QAction* m_pause_action;
@@ -51,7 +63,10 @@ private:
 	QLabel* m_level;
 	QLabel* m_lines;
 	QLabel* m_score;
+	QLabel* m_sensorStatus;
 	ScoreBoard* m_score_board;
+	SettingsDialog* m_settingsDialog;
+	QThread* m_sensorThread;
 };
 
 #endif // WINDOW_H

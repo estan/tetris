@@ -26,7 +26,7 @@
 int main(int argc, char** argv)
 {
 	QApplication app(argc, argv);
-	app.setApplicationName("Tetris");
+	app.setApplicationName("Tetris Static");
 	app.setApplicationVersion(VERSIONSTR);
 	app.setOrganizationDomain("kth.se");
 	app.setOrganizationName("KTH");

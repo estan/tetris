@@ -22,6 +22,8 @@
 #include "board.h"
 #include "locale_dialog.h"
 #include "score_board.h"
+#include "settings_dialog.h"
+#include "sensor.h"
 
 #include <ctime>
 
@@ -35,6 +37,9 @@
 #include <QMessageBox>
 #include <QPixmap>
 #include <QSettings>
+#include <QStatusBar>
+#include <QString>
+#include <QThread>
 
 /*****************************************************************************/
 
@@ -43,6 +48,9 @@ Window::Window(QWidget *parent, Qt::WindowFlags wf)
 {
 	setWindowTitle(tr("Tetris EDA"));
 	setWindowIcon(QIcon(":/tetris-eda.png"));
+
+	// Create settings dialog.
+	m_settingsDialog = new SettingsDialog(this);
 
 	QWidget* contents = new QWidget(this);
 	setCentralWidget(contents);
@@ -74,6 +82,12 @@ Window::Window(QWidget *parent, Qt::WindowFlags wf)
 	m_score->setAlignment(Qt::AlignRight | Qt::AlignVCenter);
 	m_score->setFrameStyle(QFrame::StyledPanel | QFrame::Sunken);
 	m_score->setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::Preferred);
+
+	// Create sensor status display
+	m_sensorStatus = new QLabel("Stopped", contents);
+	m_sensorStatus->setAlignment(Qt::AlignRight | Qt::AlignVCenter);
+	m_sensorStatus->setFrameStyle(QFrame::StyledPanel | QFrame::Sunken);
+	m_sensorStatus->setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::Preferred);
 
 	// Create scoreboard
 	m_score_board = new ScoreBoard(this);
@@ -122,6 +136,7 @@ Window::Window(QWidget *parent, Qt::WindowFlags wf)
 
 	menu = menuBar()->addMenu(tr("&Settings"));
 	menu->addAction(tr("Application &Language..."), this, SLOT(setLocale()));
+	menu->addAction(tr("Settings..."), this, SLOT(showSettings()));
 
 	menu = menuBar()->addMenu(tr("&Help"));
 	menu->addAction(tr("&About"), this, SLOT(about()));
@@ -147,9 +162,25 @@ Window::Window(QWidget *parent, Qt::WindowFlags wf)
 	layout->addWidget(m_lines, 7, 2);
 	layout->addWidget(new QLabel(tr("Score"), contents), 9, 2, 1, 1, Qt::AlignCenter);
 	layout->addWidget(m_score, 10, 2);
+	layout->addWidget(new QLabel(tr("Sensor Status"), contents), 12, 2, 1, 1, Qt::AlignCenter);
+	layout->addWidget(m_sensorStatus, 13, 2);
 
 	// Restore window
 	restoreGeometry(QSettings().value("Geometry").toByteArray());
+
+	// Show settings dialog if there are missing settings.
+	if (!QSettings().contains("SerialPort") || !QSettings().contains("MonitorPort")) {
+		showSettings();
+	}
+
+	initSensor();
+}
+
+Window::~Window()
+{
+	if (m_sensorThread->isRunning()) {
+		m_sensorThread->quit();
+	}
 }
 
 /*****************************************************************************/
@@ -232,6 +263,58 @@ void Window::setLocale()
 {
 	LocaleDialog dialog;
 	dialog.exec();
+}
+
+/*****************************************************************************/
+
+void Window::showSettings()
+{
+	m_settingsDialog->exec();
+}
+
+/*****************************************************************************/
+
+void Window::sensorStarted()
+{
+	m_sensorStatus->setText("Started");
+}
+
+/*****************************************************************************/
+
+void Window::sensorStopped()
+{
+	m_sensorStatus->setText("Stopped");
+}
+
+/*****************************************************************************/
+
+void Window::sensorError(const QString &error)
+{
+	m_sensorStatus->setText("Error");
+	statusBar()->showMessage(error);
+}
+
+/*****************************************************************************/
+
+void Window::initSensor()
+{
+	// Create the sensor and move it to a different thread.
+	m_sensorThread = new QThread();
+	Sensor *sensor = new Sensor(QSettings().value("SerialPort").toString());
+	sensor->moveToThread(m_sensorThread);
+
+	// Connect to sensor signals.
+	connect(sensor, SIGNAL(started()), this, SLOT(sensorStarted()));
+	connect(sensor, SIGNAL(stopped()), this, SLOT(sensorStopped()));
+	connect(sensor, SIGNAL(error(const QString &)), this, SLOT(sensorError(const QString &)));
+
+	// Connect to thread signals to start the sensor and clean up.
+	connect(m_sensorThread, SIGNAL(started()), sensor, SLOT(start()));
+	connect(m_sensorThread, SIGNAL(finished()), sensor, SLOT(deleteLater()));
+	connect(m_sensorThread, SIGNAL(finished()), m_sensorThread, SLOT(deleteLater()));
+
+	// Start the sensor thread.
+	m_sensorThread->start();
 }
 
 /*****************************************************************************/

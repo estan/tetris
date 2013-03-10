@@ -26,14 +26,18 @@ HEADERS = src/board.h \
 	src/locale_dialog.h \
 	src/piece.h \
 	src/score_board.h \
-	src/window.h
+	src/window.h \
+    src/settings_dialog.h
 
 SOURCES = src/board.cpp \
 	src/locale_dialog.cpp \
 	src/main.cpp \
 	src/piece.cpp \
 	src/score_board.cpp \
-	src/window.cpp
+	src/window.cpp \
+    src/settings_dialog.cpp
+
+FORMS += src/settings_dialog.ui
 
 TRANSLATIONS = translations/tetris-eda_en.ts \
 	translations/tetris-eda_fr.ts
@@ -78,3 +82,4 @@ DEPENDPATH += $$PWD/../sensor
 win32:CONFIG(release, debug|release): PRE_TARGETDEPS += $$OUT_PWD/../sensor/release/sensor.lib
 else:win32:CONFIG(debug, debug|release): PRE_TARGETDEPS += $$OUT_PWD/../sensor/debug/sensor.lib
 else:unix: PRE_TARGETDEPS += $$OUT_PWD/../sensor/libsensor.a
+
