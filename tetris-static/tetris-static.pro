@@ -1,8 +1,5 @@
 TEMPLATE = app
-greaterThan(QT_MAJOR_VERSION, 4) {
-	QT += widgets serialport
-}
-CONFIG += warn_on serialport
+
 macx {
 	CONFIG += x86_64
 }
