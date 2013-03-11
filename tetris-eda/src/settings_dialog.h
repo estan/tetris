@@ -1,7 +1,7 @@
 #ifndef SETTINGS_DIALOG_H
 #define SETTINGS_DIALOG_H
 
-#include "ui_settingsdialog.h"
+#include "ui_settings_dialog.h"
 
 class SettingsDialog : public QDialog, private Ui::SettingsDialog
 {
