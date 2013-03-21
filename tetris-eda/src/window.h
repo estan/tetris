@@ -21,6 +21,9 @@
 #define WINDOW_H
 
 #include <QMainWindow>
+
+#include "sensor.h"
+
 class QAction;
 class QLabel;
 class QString;
@@ -48,8 +51,7 @@ private slots:
 	void setLocale();
 
 	void showSettings();
-	void sensorStarted();
-	void sensorStopped();
+	void sensorStateChanged(Sensor::State state);
 	void sensorError(const QString &error);
 
 private:

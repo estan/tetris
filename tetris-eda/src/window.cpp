@@ -274,23 +274,29 @@ void Window::showSettings()
 
 /*****************************************************************************/
 
-void Window::sensorStarted()
+void Window::sensorStateChanged(Sensor::State state)
 {
-	m_sensorStatus->setText("Started");
-}
+	switch (state) {
+	case Sensor::Connecting:
+		m_sensorStatus->setText("Connecting...");
+		break;
+	case Sensor::Started:
+		m_sensorStatus->setText("Started");
+		break;
+	case Sensor::Stopped:
+		m_sensorStatus->setText("Stopped");
+		break;
+	default:
+		m_sensorStatus->setText("Unknown");
+		break;
 
-/*****************************************************************************/
-
-void Window::sensorStopped()
-{
-	m_sensorStatus->setText("Stopped");
+	}
 }
 
 /*****************************************************************************/
 
 void Window::sensorError(const QString &error)
 {
-	m_sensorStatus->setText("Error");
 	statusBar()->showMessage(error);
 }
 
@@ -304,8 +310,8 @@ void Window::initSensor()
 	sensor->moveToThread(m_sensorThread);
 
 	// Connect to sensor signals.
-	connect(sensor, SIGNAL(started()), this, SLOT(sensorStarted()));
-	connect(sensor, SIGNAL(stopped()), this, SLOT(sensorStopped()));
+	qRegisterMetaType<Sensor::State>("Sensor::State");
+	connect(sensor, SIGNAL(stateChanged(Sensor::State)), this, SLOT(sensorStateChanged(Sensor::State)));
 	connect(sensor, SIGNAL(error(const QString &)), this, SLOT(sensorError(const QString &)));
 
 	// Connect to thread signals to start the sensor and clean up.
