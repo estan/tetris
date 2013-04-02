@@ -3,8 +3,9 @@ function [time, conductance, event] = gettext2data(fullpathname)
 M = dlmread(fullpathname);
 
 conductance = M(:,1);
-answer = inputdlg('Enter Sampling Frequency:');
-sr = str2double(answer);
+%answer = inputdlg('Enter Sampling Frequency:');
+%sr = str2double(answer);
+sr = 8;
 time = (0:length(conductance)-1) / sr;
 
 if size(M,2) > 1
