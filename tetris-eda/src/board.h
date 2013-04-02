@@ -33,7 +33,7 @@ public:
 	/**
 	 * This enum describes a set of difficulty levels.
 	 */
-	enum Level {
+	enum DifficultyLevel {
 		FirstLevel,
 		SecondLevel,
 		ThirdLevel,

@@ -33,7 +33,7 @@ signals:
 	 *
 	 * @param level The requested difficulty level.
 	 */
-	void changeLevel(Board::Level level);
+	void changeLevel(Board::DifficultyLevel level);
 };
 
 #endif // LEVEL_CONTROLLER_H
