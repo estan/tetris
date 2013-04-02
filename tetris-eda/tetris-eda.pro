@@ -27,8 +27,7 @@ HEADERS = src/board.h \
 	src/piece.h \
 	src/score_board.h \
 	src/window.h \
-    src/settings_dialog.h \
-    src/level_controller.h
+	src/settings_dialog.h
 
 SOURCES = src/board.cpp \
 	src/locale_dialog.cpp \
@@ -36,8 +35,7 @@ SOURCES = src/board.cpp \
 	src/piece.cpp \
 	src/score_board.cpp \
 	src/window.cpp \
-    src/settings_dialog.cpp \
-    src/level_controller.cpp
+	src/settings_dialog.cpp
 
 FORMS += src/settings_dialog.ui
 
