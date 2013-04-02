@@ -129,6 +129,13 @@ void Board::findFullLines()
 
 /*****************************************************************************/
 
+Board::DifficultyLevel Board::difficultyLevel() const
+{
+	return m_difficultyLevel;
+}
+
+/*****************************************************************************/
+
 void Board::setDifficultyLevel(DifficultyLevel level)
 {
 	if (level == m_difficultyLevel)

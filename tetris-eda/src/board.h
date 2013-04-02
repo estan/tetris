@@ -57,6 +57,13 @@ public:
 	void findFullLines();
 
 	/**
+	 * Returns the current difficulty level of the game.
+	 *
+	 * @return The current difficulty level.
+	 */
+	DifficultyLevel difficultyLevel() const;
+
+	/**
 	 * Sets the difficulty level of the game.
 	 *
 	 * @param level The new difficulty level.
