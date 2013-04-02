@@ -79,6 +79,14 @@ signals:
 	 */
 	void performanceChanged(Performance performance);
 
+
+	/**
+	 * Emitted when the difficulty level of the game changes.
+	 *
+	 * @param level The new difficulty level.
+	 */
+	void difficultyLevelChanged(DifficultyLevel level);
+
 protected:
 	virtual void keyPressEvent(QKeyEvent* event);
 	virtual void mousePressEvent(QMouseEvent* event);
