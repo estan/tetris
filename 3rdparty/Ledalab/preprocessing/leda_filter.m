@@ -50,6 +50,13 @@ sc = filter(b, a, leda2.data.conductance.data);
 leda2.data.conductance.data = sc(:)';
 
 delete_fit(0);
-refresh_data(1);
+
+if nargin == 0 % Support batch mode. /Elvis
+    refresh_data(1);
+end
 file_changed(1);
-add2log(1,['Data filtered with ',  typeTxtL{typenr},' (',num2str(limits(1)), ' - ', num2str(limits(2)),')'],1,1,1);
+if nargin == 0 % Support batch mode. /Elvis
+    add2log(1,['Data filtered with ',  typeTxtL{typenr},' (',num2str(limits(1)), ' - ', num2str(limits(2)),')'],1,1,1);
+else
+    add2log(1,['Data filtered with ',  type,' (',num2str(limits(1)), ' - ', num2str(limits(2)),')'],1,1,1);
+end
