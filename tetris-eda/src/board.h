@@ -28,7 +28,28 @@ class Piece;
 class Board : public QWidget
 {
 	Q_OBJECT
+
 public:
+	/**
+	 * This enum describes a set of difficulty levels.
+	 */
+	enum Level {
+		FirstLevel,
+		SecondLevel,
+		ThirdLevel,
+		FourthLevel,
+		FifthLevel
+	};
+
+	/**
+	 * This enum describes a set of performance levels.
+	 */
+	enum Performance {
+		BadPerformance,
+		GoodPerformance,
+		ExcellentPerformance
+	};
+
 	Board(QWidget* parent = 0);
 
 	bool cell(int x, int y) const;
@@ -50,6 +71,13 @@ signals:
 	void gameStarted();
 	void hideMessage();
 	void showMessage(const QString& message);
+
+	/**
+	 * Emitted when the performance of the player changes.
+	 *
+	 * @param performance The new performance of the player.
+	 */
+	void performanceChanged(Performance performance);
 
 protected:
 	virtual void keyPressEvent(QKeyEvent* event);
