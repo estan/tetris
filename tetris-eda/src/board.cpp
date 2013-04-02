@@ -53,15 +53,22 @@ Board::Board(QWidget* parent)
 	m_started(false),
 	m_done(false),
 	m_paused(false),
-	m_top_cell_y(19),
-	m_performance(ExcellentPerformance)
+	m_topCellY(19),
+	m_performance(ExcellentPerformance),
+	m_difficultyLevel(FirstLevel),
+	m_shiftTime(1000),
+	m_firstLevelShiftTime(1000),
+	m_secondLevelShiftTime(500),
+	m_thirdLevelShiftTime(250),
+	m_fourthLevelShiftTime(250),
+	m_fifthLevelShiftTime(250)
 {
 	setMinimumSize(201, 401);
 	setFocusPolicy(Qt::StrongFocus);
 	setFocus();
 
 	m_shift_timer = new QTimer(this);
-	m_shift_timer->setInterval(500);
+	m_shift_timer->setInterval(m_shiftTime);
 	m_shift_timer->setSingleShot(true);
 	connect(m_shift_timer, SIGNAL(timeout()), this, SLOT(shiftPiece()));
 
@@ -122,6 +129,42 @@ void Board::findFullLines()
 
 /*****************************************************************************/
 
+void Board::setDifficultyLevel(DifficultyLevel level)
+{
+	if (level == m_difficultyLevel)
+		return;
+
+	switch (level) {
+	case FirstLevel:
+		m_shiftTime = m_firstLevelShiftTime;
+		break;
+	case SecondLevel:
+		m_shiftTime = m_secondLevelShiftTime;
+		break;
+	case ThirdLevel:
+		m_shiftTime = m_thirdLevelShiftTime;
+		break;
+	case FourthLevel:
+		// TODO: Switch left/right.
+		m_shiftTime = m_fourthLevelShiftTime;
+		break;
+	case FifthLevel:
+		// TODO: Switch up/down.
+		m_shiftTime = m_fifthLevelShiftTime;
+		break;
+	default:
+		qWarning("Unknown difficulty level");
+		return;
+	}
+	m_difficultyLevel = level;
+	m_shift_timer->setInterval(m_shiftTime);
+	m_shift_timer->setSingleShot(true);
+
+	emit difficultyLevelChanged(m_difficultyLevel);
+}
+
+/*****************************************************************************/
+
 void Board::newGame()
 {
 	if (!endGame()) {
@@ -140,10 +183,12 @@ void Board::newGame()
 	m_removed_lines = 0;
 	m_level = 1;
 	m_score = 0;
-	m_shift_timer->setInterval(500);
+	m_shift_timer->setInterval(m_shiftTime);
 	m_next_piece = (rand() % 7) + 1;
-	m_top_cell_y = 19;
+	m_topCellY = 19;
 	m_performance = ExcellentPerformance;
+	m_difficultyLevel = FirstLevel;
+	m_shiftTime = m_firstLevelShiftTime;
 
 	for (int i = 0; i < 4; ++i)
 		m_full_lines[i] = -1;
@@ -159,7 +204,6 @@ void Board::newGame()
 	emit linesRemovedUpdated(m_removed_lines);
 	emit scoreUpdated(m_score);
 	emit gameStarted();
-	emit performanceChanged(m_performance);
 
 	setCursor(Qt::BlankCursor);
 	createPiece();
@@ -365,7 +409,7 @@ void Board::removeLines()
 			removeCell(col, row);
 		}
 		++m_removed_lines;
-		++m_top_cell_y;
+		++m_topCellY;
 		score *= 3;
 
 		// Shift board down
@@ -384,7 +428,7 @@ void Board::removeLines()
 	}
 
 	m_level = (m_removed_lines / 10) + 1;
-	m_shift_timer->setInterval(10000 / (m_removed_lines + 20));
+	//m_shift_timer->setInterval(10000 / (m_removed_lines + 20));
 	m_score += score;
 	emit levelUpdated(m_level);
 	emit linesRemovedUpdated(m_removed_lines);
@@ -472,9 +516,9 @@ void Board::landPiece()
 	if (m_full_lines[0] != -1) {
 		m_flash_timer->start();
 	} else {
-		if (top_cell_y < m_top_cell_y) {
+		if (top_cell_y < m_topCellY) {
 			// Height of stack increased.
-			m_top_cell_y = top_cell_y;
+			m_topCellY = top_cell_y;
 			// Update performance.
 			updatePerformance();
 		}
@@ -519,9 +563,9 @@ QPixmap Board::renderPiece(int type) const
 void Board::updatePerformance()
 {
 	Performance newPerformance = m_performance;
-	if (m_top_cell_y < 6) {
+	if (m_topCellY < 6) {
 		newPerformance = PoorPerformance;
-	} else if (m_top_cell_y < 14) {
+	} else if (m_topCellY < 14) {
 		newPerformance = GoodPerformance;
 	} else {
 		newPerformance = ExcellentPerformance;

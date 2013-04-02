@@ -56,6 +56,13 @@ public:
 	bool endGame();
 	void findFullLines();
 
+	/**
+	 * Sets the difficulty level of the game.
+	 *
+	 * @param level The new difficulty level.
+	 */
+	void setDifficultyLevel(DifficultyLevel level);
+
 public slots:
 	void newGame();
 	void pauseGame();
@@ -125,8 +132,18 @@ private:
 	bool m_started;
 	bool m_done;
 	bool m_paused;
-	int m_top_cell_y;          // Y-coordinate of top-most landed cell.
-	Performance m_performance; // Performance of the player.
+
+	int m_topCellY;                    // Y-coordinate of top-most landed cell.
+	Performance m_performance;         // Performance of the player.
+	DifficultyLevel m_difficultyLevel; // Difficulty level.
+	int m_shiftTime;                   // Time to wait before shifting the piece.
+
+	// Time to wait before shifting the piece for each difficulty level.
+	int m_firstLevelShiftTime;
+	int m_secondLevelShiftTime;
+	int m_thirdLevelShiftTime;
+	int m_fourthLevelShiftTime;
+	int m_fifthLevelShiftTime;
 };
 
 inline bool Board::cell(int x, int y) const
