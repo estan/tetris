@@ -52,7 +52,9 @@ Board::Board(QWidget* parent)
 	m_piece_size(0),
 	m_started(false),
 	m_done(false),
-	m_paused(false)
+	m_paused(false),
+	m_top_cell_y(19),
+	m_performance(ExcellentPerformance)
 {
 	setMinimumSize(201, 401);
 	setFocusPolicy(Qt::StrongFocus);
@@ -140,6 +142,8 @@ void Board::newGame()
 	m_score = 0;
 	m_shift_timer->setInterval(500);
 	m_next_piece = (rand() % 7) + 1;
+	m_top_cell_y = 19;
+	m_performance = ExcellentPerformance;
 
 	for (int i = 0; i < 4; ++i)
 		m_full_lines[i] = -1;
@@ -155,6 +159,7 @@ void Board::newGame()
 	emit linesRemovedUpdated(m_removed_lines);
 	emit scoreUpdated(m_score);
 	emit gameStarted();
+	emit performanceChanged(m_performance);
 
 	setCursor(Qt::BlankCursor);
 	createPiece();
@@ -360,6 +365,7 @@ void Board::removeLines()
 			removeCell(col, row);
 		}
 		++m_removed_lines;
+		++m_top_cell_y;
 		score *= 3;
 
 		// Shift board down
@@ -387,6 +393,9 @@ void Board::removeLines()
 	// Empty list of full lines
 	for (int i = 0; i < 4; ++i)
 		m_full_lines[i] = -1;
+
+	// Update performance.
+	updatePerformance();
 
 	// Add new piece
 	createPiece();
@@ -450,9 +459,11 @@ void Board::landPiece()
 	m_shift_timer->stop();
 
 	int type = m_piece->type();
+	int top_cell_y = 19; // Y-coordinate of top-most cell.
 	const Cell* cells = m_piece->cells();
 	for (int i = 0; i < 4; ++i) {
 		addCell(cells[i].x, cells[i].y, type);
+		top_cell_y = qMin(top_cell_y, cells[i].y);
 	}
 	delete m_piece;
 	m_piece = 0;
@@ -461,6 +472,12 @@ void Board::landPiece()
 	if (m_full_lines[0] != -1) {
 		m_flash_timer->start();
 	} else {
+		if (top_cell_y < m_top_cell_y) {
+			// Height of stack increased.
+			m_top_cell_y = top_cell_y;
+			// Update performance.
+			updatePerformance();
+		}
 		createPiece();
 	}
 }
@@ -495,6 +512,24 @@ QPixmap Board::renderPiece(int type) const
 	}
 
 	return result;
+}
+
+/*****************************************************************************/
+
+void Board::updatePerformance()
+{
+	Performance newPerformance = m_performance;
+	if (m_top_cell_y < 6) {
+		newPerformance = PoorPerformance;
+	} else if (m_top_cell_y < 14) {
+		newPerformance = GoodPerformance;
+	} else {
+		newPerformance = ExcellentPerformance;
+	}
+	if (newPerformance != m_performance) {
+		m_performance = newPerformance;
+		emit performanceChanged(newPerformance);
+	}
 }
 
 /*****************************************************************************/

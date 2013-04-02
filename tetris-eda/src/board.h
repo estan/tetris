@@ -45,7 +45,7 @@ public:
 	 * This enum describes a set of performance levels.
 	 */
 	enum Performance {
-		BadPerformance,
+		PoorPerformance,
 		GoodPerformance,
 		ExcellentPerformance
 	};
@@ -98,6 +98,7 @@ private:
 	void createPiece();
 	void landPiece();
 	QPixmap renderPiece(int type) const;
+	void updatePerformance();
 
 private:
 	QPixmap m_images[7];
@@ -116,6 +117,8 @@ private:
 	bool m_started;
 	bool m_done;
 	bool m_paused;
+	int m_top_cell_y;          // Y-coordinate of top-most landed cell.
+	Performance m_performance; // Performance of the player.
 };
 
 inline bool Board::cell(int x, int y) const
