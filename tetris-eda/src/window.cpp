@@ -94,7 +94,7 @@ Window::Window(QWidget *parent, Qt::WindowFlags wf)
 
 	// Create board
 	srand(time(0));
-	m_board = new Board(contents);
+	m_board = new Board(true, contents);
 	connect(m_board, SIGNAL(pauseAvailable(bool)), this, SLOT(pauseAvailable(bool)));
 	connect(m_board, SIGNAL(nextPieceAvailable(QPixmap)), m_preview, SLOT(setPixmap(QPixmap)));
 	connect(m_board, SIGNAL(levelUpdated(int)), m_level, SLOT(setNum(int)));

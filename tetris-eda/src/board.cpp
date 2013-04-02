@@ -26,6 +26,7 @@
 #include <QPainter>
 #include <QPixmap>
 #include <QTimer>
+#include <QDebug>
 
 /*****************************************************************************/
 
@@ -41,7 +42,7 @@ static QColor colors[] = {
 
 /*****************************************************************************/
 
-Board::Board(QWidget* parent)
+Board::Board(bool adjustToPerformance, QWidget* parent)
 :	QWidget(parent),
 	m_removed_lines(0),
 	m_level(1),
@@ -53,15 +54,13 @@ Board::Board(QWidget* parent)
 	m_started(false),
 	m_done(false),
 	m_paused(false),
-	m_topCellY(19),
-	m_performance(ExcellentPerformance),
 	m_difficultyLevel(FirstLevel),
+	m_adjustToPerformance(adjustToPerformance),
+	m_topCellY(19),
 	m_shiftTime(1000),
 	m_firstLevelShiftTime(1000),
 	m_secondLevelShiftTime(500),
-	m_thirdLevelShiftTime(250),
-	m_fourthLevelShiftTime(250),
-	m_fifthLevelShiftTime(250)
+	m_thirdLevelShiftTime(250)
 {
 	setMinimumSize(201, 401);
 	setFocusPolicy(Qt::StrongFocus);
@@ -136,6 +135,48 @@ Board::DifficultyLevel Board::difficultyLevel() const
 
 /*****************************************************************************/
 
+void Board::increaseDifficultyLevel()
+{
+	if (m_difficultyLevel == ThirdLevel)
+		return; // Already on highest level.
+
+	DifficultyLevel newLevel = m_difficultyLevel;
+
+	if (m_difficultyLevel == FirstLevel)
+		newLevel = SecondLevel;
+	else if (m_difficultyLevel == SecondLevel)
+		newLevel = ThirdLevel;
+	else {
+		qWarning("Unknown difficulty level");
+		return;
+	}
+
+	setDifficultyLevel(newLevel);
+}
+
+/*****************************************************************************/
+
+void Board::decreaseDifficultyLevel()
+{
+	if (m_difficultyLevel == FirstLevel)
+		return; // Already on lowest level.
+
+	DifficultyLevel newLevel = m_difficultyLevel;
+
+	if (m_difficultyLevel == ThirdLevel)
+		newLevel = SecondLevel;
+	else if (m_difficultyLevel == SecondLevel)
+		newLevel = FirstLevel;
+	else {
+		qWarning("Unknown difficulty level");
+		return;
+	}
+
+	setDifficultyLevel(newLevel);
+}
+
+/*****************************************************************************/
+
 void Board::setDifficultyLevel(DifficultyLevel level)
 {
 	if (level == m_difficultyLevel)
@@ -151,18 +192,11 @@ void Board::setDifficultyLevel(DifficultyLevel level)
 	case ThirdLevel:
 		m_shiftTime = m_thirdLevelShiftTime;
 		break;
-	case FourthLevel:
-		// TODO: Switch left/right.
-		m_shiftTime = m_fourthLevelShiftTime;
-		break;
-	case FifthLevel:
-		// TODO: Switch up/down.
-		m_shiftTime = m_fifthLevelShiftTime;
-		break;
 	default:
 		qWarning("Unknown difficulty level");
 		return;
 	}
+	qDebug() << "New difficulty: " << level;
 	m_difficultyLevel = level;
 	m_shift_timer->setInterval(m_shiftTime);
 	m_shift_timer->setSingleShot(true);
@@ -193,7 +227,6 @@ void Board::newGame()
 	m_shift_timer->setInterval(m_shiftTime);
 	m_next_piece = (rand() % 7) + 1;
 	m_topCellY = 19;
-	m_performance = ExcellentPerformance;
 	m_difficultyLevel = FirstLevel;
 	m_shiftTime = m_firstLevelShiftTime;
 
@@ -445,9 +478,6 @@ void Board::removeLines()
 	for (int i = 0; i < 4; ++i)
 		m_full_lines[i] = -1;
 
-	// Update performance.
-	updatePerformance();
-
 	// Add new piece
 	createPiece();
 }
@@ -492,6 +522,8 @@ void Board::createPiece()
 {
 	Q_ASSERT(m_piece == 0);
 
+	updateDifficultyFromPerformance();
+
 	m_piece = new Piece(m_next_piece, this);
 	if (m_piece->isValid()) {
 		m_next_piece = (rand() % 7) + 1;
@@ -526,8 +558,6 @@ void Board::landPiece()
 		if (top_cell_y < m_topCellY) {
 			// Height of stack increased.
 			m_topCellY = top_cell_y;
-			// Update performance.
-			updatePerformance();
 		}
 		createPiece();
 	}
@@ -567,19 +597,19 @@ QPixmap Board::renderPiece(int type) const
 
 /*****************************************************************************/
 
-void Board::updatePerformance()
+void Board::updateDifficultyFromPerformance()
 {
-	Performance newPerformance = m_performance;
-	if (m_topCellY < 6) {
-		newPerformance = PoorPerformance;
-	} else if (m_topCellY < 14) {
-		newPerformance = GoodPerformance;
+	if (!m_adjustToPerformance)
+		return; // Not enabled.
+
+	if (m_topCellY < 8) {
+		setDifficultyLevel(FirstLevel);
+		// increaseDifficultyLevel();
+	} else if (m_topCellY > 13) {
+		setDifficultyLevel(ThirdLevel);
+		// decreaseDifficultyLevel();
 	} else {
-		newPerformance = ExcellentPerformance;
-	}
-	if (newPerformance != m_performance) {
-		m_performance = newPerformance;
-		emit performanceChanged(newPerformance);
+		setDifficultyLevel(SecondLevel);
 	}
 }
 

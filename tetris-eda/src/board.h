@@ -36,21 +36,10 @@ public:
 	enum DifficultyLevel {
 		FirstLevel,
 		SecondLevel,
-		ThirdLevel,
-		FourthLevel,
-		FifthLevel
+		ThirdLevel
 	};
 
-	/**
-	 * This enum describes a set of performance levels.
-	 */
-	enum Performance {
-		PoorPerformance,
-		GoodPerformance,
-		ExcellentPerformance
-	};
-
-	Board(QWidget* parent = 0);
+	Board(bool adjustToPerformance, QWidget* parent = 0);
 
 	bool cell(int x, int y) const;
 	bool endGame();
@@ -63,17 +52,27 @@ public:
 	 */
 	DifficultyLevel difficultyLevel() const;
 
+public slots:
+	void newGame();
+	void pauseGame();
+	void resumeGame();
+
+	/**
+	 * Increases the difficulty level one step, if possible.
+	 */
+	void increaseDifficultyLevel();
+
+	/**
+	 * Decreases the difficulty level one step, if possible.
+	 */
+	void decreaseDifficultyLevel();
+
 	/**
 	 * Sets the difficulty level of the game.
 	 *
 	 * @param level The new difficulty level.
 	 */
 	void setDifficultyLevel(DifficultyLevel level);
-
-public slots:
-	void newGame();
-	void pauseGame();
-	void resumeGame();
 
 signals:
 	void pauseAvailable(bool available);
@@ -85,14 +84,6 @@ signals:
 	void gameStarted();
 	void hideMessage();
 	void showMessage(const QString& message);
-
-	/**
-	 * Emitted when the performance of the player changes.
-	 *
-	 * @param performance The new performance of the player.
-	 */
-	void performanceChanged(Performance performance);
-
 
 	/**
 	 * Emitted when the difficulty level of the game changes.
@@ -120,7 +111,7 @@ private:
 	void createPiece();
 	void landPiece();
 	QPixmap renderPiece(int type) const;
-	void updatePerformance();
+	void updateDifficultyFromPerformance();
 
 private:
 	QPixmap m_images[7];
@@ -140,17 +131,15 @@ private:
 	bool m_done;
 	bool m_paused;
 
-	int m_topCellY;                    // Y-coordinate of top-most landed cell.
-	Performance m_performance;         // Performance of the player.
 	DifficultyLevel m_difficultyLevel; // Difficulty level.
+	bool m_adjustToPerformance;        // Adjust difficulty based on performance?
+	int m_topCellY;                    // Y-coordinate of top-most landed cell.
 	int m_shiftTime;                   // Time to wait before shifting the piece.
 
 	// Time to wait before shifting the piece for each difficulty level.
 	int m_firstLevelShiftTime;
 	int m_secondLevelShiftTime;
 	int m_thirdLevelShiftTime;
-	int m_fourthLevelShiftTime;
-	int m_fifthLevelShiftTime;
 };
 
 inline bool Board::cell(int x, int y) const
