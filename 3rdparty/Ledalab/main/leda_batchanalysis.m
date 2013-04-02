@@ -63,6 +63,9 @@ for iFile = 1:nFile
             end
         end
         
+        %Butterworth filter
+        leda_filter([1 4], 'butter');
+ 
         %Analysis
         if analysis_method > 0
             delete_fit;
