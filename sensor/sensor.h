@@ -26,7 +26,7 @@ public:
 
 signals:
 	void stateChanged(Sensor::State state);
-	void batchAvailable(QList<SensorReading> readings);
+	void analyze(QList<SensorReading> readings);
 	void error(const QString &error);
 
 public slots:
