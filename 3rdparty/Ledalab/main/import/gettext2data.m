@@ -5,7 +5,7 @@ M = dlmread(fullpathname);
 conductance = M(:,1);
 %answer = inputdlg('Enter Sampling Frequency:');
 %sr = str2double(answer);
-sr = 8;
+sr = 32;
 time = (0:length(conductance)-1) / sr;
 
 if size(M,2) > 1
