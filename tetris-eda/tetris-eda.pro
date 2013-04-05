@@ -27,7 +27,8 @@ HEADERS = src/board.h \
 	src/piece.h \
 	src/score_board.h \
 	src/window.h \
-	src/settings_dialog.h
+	src/settings_dialog.h \
+    src/analyzer.h
 
 SOURCES = src/board.cpp \
 	src/locale_dialog.cpp \
@@ -35,7 +36,8 @@ SOURCES = src/board.cpp \
 	src/piece.cpp \
 	src/score_board.cpp \
 	src/window.cpp \
-	src/settings_dialog.cpp
+	src/settings_dialog.cpp \
+    src/analyzer.cpp
 
 FORMS += src/settings_dialog.ui
 
@@ -83,3 +85,13 @@ win32:CONFIG(release, debug|release): PRE_TARGETDEPS += $$OUT_PWD/../sensor/rele
 else:win32:CONFIG(debug, debug|release): PRE_TARGETDEPS += $$OUT_PWD/../sensor/debug/sensor.lib
 else:unix: PRE_TARGETDEPS += $$OUT_PWD/../sensor/libsensor.a
 
+# MATLAB libraries and includes
+MATLAB_PREFIX = /home/estan/Blandat/MATLAB
+MATLAB_INCLUDES = $$MATLAB_PREFIX/R2012a/extern/include
+MATLAB_LIBS = $$MATLAB_PREFIX/R2012a/bin/glnxa64
+
+LIBS += -L$$MATLAB_LIBS -leng -lmx
+INCLUDEPATH += $$MATLAB_INCLUDES
+DEPENDPATH += $$MATLAB_LIBS
+
+unix:QMAKE_LFLAGS += -Wl,-rpath,$$MATLAB_LIBS,-rpath-link,$$MATLAB_LIBS

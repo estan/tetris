@@ -36,6 +36,7 @@ void SettingsDialog::on_serialPortEdit_textChanged(const QString &fileName)
 
 void SettingsDialog::checkInputs()
 {
+	/*
 	QFileInfo fileInfo(serialPortEdit->text());
 	if (fileInfo.exists()) {
 		serialPortEdit->setStyleSheet(styleSheet());
@@ -43,5 +44,5 @@ void SettingsDialog::checkInputs()
 	} else {
 		serialPortEdit->setStyleSheet("QLineEdit { border: 1px solid red; }");
 		buttonBox->button(QDialogButtonBox::Ok)->setEnabled(false);
-	}
+	}*/
 }

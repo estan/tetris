@@ -58,6 +58,7 @@ Board::Board(bool adjustToPerformance, QWidget* parent)
 	m_adjustToPerformance(adjustToPerformance),
 	m_topCellY(19),
 	m_shiftTime(1000),
+	m_isFirstPiece(true),
 	m_firstLevelShiftTime(1000),
 	m_secondLevelShiftTime(500),
 	m_thirdLevelShiftTime(250)
@@ -202,6 +203,16 @@ void Board::setDifficultyLevel(DifficultyLevel level)
 	m_shift_timer->setSingleShot(true);
 
 	emit difficultyLevelChanged(m_difficultyLevel);
+}
+
+void Board::adjustDifficultyToStressLevel(Analyzer::StressLevel level)
+{
+	qDebug() << "Current difficulty: " << m_difficultyLevel;
+	if (level == Analyzer::Low) {
+		increaseDifficultyLevel();
+	} else if (level == Analyzer::High) {
+		decreaseDifficultyLevel();
+	}
 }
 
 /*****************************************************************************/
@@ -533,6 +544,7 @@ void Board::createPiece()
 		gameOver();
 	}
 	update();
+	m_isFirstPiece = false;
 }
 
 /*****************************************************************************/
@@ -599,15 +611,13 @@ QPixmap Board::renderPiece(int type) const
 
 void Board::updateDifficultyFromPerformance()
 {
-	if (!m_adjustToPerformance)
+	if (!m_adjustToPerformance || m_isFirstPiece)
 		return; // Not enabled.
 
 	if (m_topCellY < 8) {
 		setDifficultyLevel(FirstLevel);
-		// increaseDifficultyLevel();
 	} else if (m_topCellY > 13) {
 		setDifficultyLevel(ThirdLevel);
-		// decreaseDifficultyLevel();
 	} else {
 		setDifficultyLevel(SecondLevel);
 	}

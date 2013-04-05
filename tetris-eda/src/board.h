@@ -21,6 +21,8 @@
 #define BOARD_H
 
 #include <QWidget>
+#include "analyzer.h"
+
 class QPixmap;
 class QTimer;
 class Piece;
@@ -73,6 +75,13 @@ public slots:
 	 * @param level The new difficulty level.
 	 */
 	void setDifficultyLevel(DifficultyLevel level);
+
+	/**
+	 * Adjusts the game difficulty level to stress level.
+	 *
+	 * @param level The stress level to adjust to.
+	 */
+	void adjustDifficultyToStressLevel(Analyzer::StressLevel level);
 
 signals:
 	void pauseAvailable(bool available);
@@ -135,6 +144,7 @@ private:
 	bool m_adjustToPerformance;        // Adjust difficulty based on performance?
 	int m_topCellY;                    // Y-coordinate of top-most landed cell.
 	int m_shiftTime;                   // Time to wait before shifting the piece.
+	bool m_isFirstPiece;               // True if the player is playing the first piece.
 
 	// Time to wait before shifting the piece for each difficulty level.
 	int m_firstLevelShiftTime;

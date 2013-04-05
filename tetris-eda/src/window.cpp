@@ -41,10 +41,14 @@
 #include <QString>
 #include <QThread>
 
+#include "analyzer.h"
+
 /*****************************************************************************/
 
 Window::Window(QWidget *parent, Qt::WindowFlags wf)
-:	QMainWindow(parent, wf)
+:	QMainWindow(parent, wf),
+  m_sensorThread(0),
+  m_analyzerThread(0)
 {
 	setWindowTitle(tr("Tetris EDA"));
 	setWindowIcon(QIcon(":/tetris-eda.png"));
@@ -173,12 +177,13 @@ Window::Window(QWidget *parent, Qt::WindowFlags wf)
 		showSettings();
 	}
 
+	// Initialize sensor / analyzer.
 	initSensor();
 }
 
 Window::~Window()
 {
-	if (m_sensorThread->isRunning()) {
+	if (m_sensorThread && m_sensorThread->isRunning()) {
 		m_sensorThread->quit();
 	}
 }
@@ -309,8 +314,21 @@ void Window::initSensor()
 	Sensor *sensor = new Sensor(QSettings().value("SerialPort").toString());
 	sensor->moveToThread(m_sensorThread);
 
-	// Connect to sensor signals.
+	// Create the analyzer and move it to a different thread.
+	m_analyzerThread = new QThread();
+	Analyzer *analyzer = new Analyzer("/home/estan/testout");
+	analyzer->moveToThread(m_analyzerThread);
+
+	// Connect sensor's analyze signal to analyzer's analyze slot.
+	connect(sensor, SIGNAL(analyze(QList<SensorReading>)), analyzer, SLOT(analyze(QList<SensorReading>)));
+
+	// Connect analyzer's stressLevelChanged to the board's adjustDifficultyToStressLevel slot.
+	qRegisterMetaType<Sensor::State>("Analyzer::StressLevel");
+	//connect(analyzer, SIGNAL(stressLevelChanged(Analyzer::StressLevel)), m_board, SLOT(adjustDifficultyToStressLevel(Analyzer::StressLevel)));
+
+	// Connect window to sensor signals.
 	qRegisterMetaType<Sensor::State>("Sensor::State");
+	qRegisterMetaType<QList<SensorReading> >("QList<SensorReading>");
 	connect(sensor, SIGNAL(stateChanged(Sensor::State)), this, SLOT(sensorStateChanged(Sensor::State)));
 	connect(sensor, SIGNAL(error(const QString &)), this, SLOT(sensorError(const QString &)));
 
@@ -319,8 +337,14 @@ void Window::initSensor()
 	connect(m_sensorThread, SIGNAL(finished()), sensor, SLOT(deleteLater()));
 	connect(m_sensorThread, SIGNAL(finished()), m_sensorThread, SLOT(deleteLater()));
 
-	// Start the sensor thread.
+	// Connect to analyzer signals to start the analyzer and clean up.
+	connect(m_analyzerThread, SIGNAL(started()), analyzer, SLOT(start()));
+	connect(m_analyzerThread, SIGNAL(finished()), analyzer, SLOT(deleteLater()));
+	connect(m_analyzerThread, SIGNAL(finished()), m_analyzerThread, SLOT(deleteLater()));
+
+	// Start the sensor and analyzer threads.
 	m_sensorThread->start();
+	m_analyzerThread->start();
 }
 
 /*****************************************************************************/

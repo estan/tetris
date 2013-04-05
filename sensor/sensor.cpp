@@ -74,7 +74,6 @@ void Sensor::readData()
 			break;
 		}
 		m_readings.append(reading);
-		qDebug() << reading;
 		QDateTime firstTime = m_readings.first().time();
 		if (firstTime.msecsTo(QDateTime::currentDateTimeUtc()) >= 5000) {
 			// We have 5 seconds of readings, so emit the batch.

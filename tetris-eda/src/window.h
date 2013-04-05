@@ -69,6 +69,7 @@ private:
 	ScoreBoard* m_score_board;
 	SettingsDialog* m_settingsDialog;
 	QThread* m_sensorThread;
+	QThread* m_analyzerThread;
 };
 
 #endif // WINDOW_H
