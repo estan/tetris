@@ -37,7 +37,7 @@ for iFile = 1:nFile
     leda2.current.batchmode.file(iFile).name = filename;
     disp(' '); add2log(1,['Batch-Analyzing ',filename],1,0,0,1)
     
-    try
+    %try
         %Open
         if strcmp(open_datatype,'leda')
             open_ledafile(0, pathname, filename);
@@ -111,9 +111,9 @@ for iFile = 1:nFile
             save_ledafile(0);
         end
         
-    catch
-        add2log(1,'ERROR !!!',1,0,0,1)
-    end
+    %catch
+        %add2log(1,'ERROR !!!',1,0,0,1)
+    %end
     
 end
 

@@ -35,6 +35,7 @@ tb = t - t(1) + dt;
 bg = bateman_gauss(tb, 5, 1, 2, 40, .4);
 [mx, idx] = max(bg);
 
+idx = min(idx, size(bg, 2)-1);
 prefix = bg(1:(idx+1)) / bg(idx+1) * d(1); %+10
 prefix = nonzeros(prefix);
 n_prefix = length(prefix);

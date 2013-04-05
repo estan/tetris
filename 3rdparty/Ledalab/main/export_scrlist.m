@@ -136,6 +136,30 @@ if leda2.set.export.savetype == 2
     fclose(fid);
 end
 
+%-CSV Export (Only amplitudes)
+if leda2.set.export.savetype == 5
+    savefname = [savefname,'.csv'];
+    fid = fopen(savefname,'wt');
+    
+    if isempty(leda2.analysis)
+        for i = 1:length(scrList.TTP.onset)
+            fprintf(fid,'%.4f\n', scrList.TTP.amp(i));
+        end
+    else
+        if strcmp(leda2.analysis.method,'sdeco')
+            for i = 1:length(scrList.CDA.onset)
+                fprintf(fid,'%.4f\n', scrList.CDA.amp(i));
+            end
+            
+        elseif strcmp(leda2.analysis.method,'nndeco')
+            for i = 1:length(scrList.DDA.onset)
+                fprintf(fid,'%.4f\n', scrList.DDA.amp(i));
+            end
+        end
+    end
+    fclose(fid);
+end
+
 %%EXCEL
 if leda2.set.export.savetype == 3
     savefname = [savefname,'.xls'];
