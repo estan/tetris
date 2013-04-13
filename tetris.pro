@@ -1,7 +1,7 @@
 include(common.pri)
 
 TEMPLATE = subdirs
-SUBDIRS = tetris-static sensor
+SUBDIRS = sensor
 
 serialport {
 	SUBDIRS += tetris-eda simulator
